@@ -1,4 +1,4 @@
-#!/usr/bn/env python3
+#!/usr/bin/env python3
 """
 A module for testing the utils module.
 """
@@ -10,7 +10,7 @@ from utils import access_nested_map
 
 class TestAccessNestedMap(unittest.TestCase):
     """
-    Tests for the `access_nested_map` function
+    Tests for the `access_nested_map` function.
     """
     @parameterized.expand([
         ({"a": 1}, ("a",), 1),
@@ -27,7 +27,7 @@ class TestAccessNestedMap(unittest.TestCase):
 
         Args:
             nested_map (dict): The nested dictionary to access.
-            path (tuple): The path to value in the nested dictionary.
+            path (tuple): The path to the value in the nested dictionary.
             expected_output (Any): The expected output of the function.
 
         Asserts that the output of `access_nested_map` is equal to
@@ -36,24 +36,26 @@ class TestAccessNestedMap(unittest.TestCase):
         self.assertEqual(access_nested_map(nested_map, path), expected_output)
 
         @parameterized.expand([
-            ({}, ("a",), KeyError),
+            ({}, ("a",), KeyError("a")),
             ({"a": 1}, ("a", "b"),
-             KeyError),
+             KeyError("b")),
         ])
-        def test_access_nested_map_exception(
-            self,
-            nested_map: Dict[str, Any],
-            path: Tuple[str],
-            expected_exception: Exception
-        ) -> None:
-            """
-            Tests that `access_nested_map` raises the correct exception.
-            Args:
-                nested_map (dict): The nested dictionary to access.
-                path (tuple): The path to the value in the nested dictionary.
-                expected_exception (Exception): The expected exception.
+    def test_access_nested_map_exception(
+        self,
+        nested_map: Dict[str, Any],
+        path: Tuple[str],
+        expected_exception: Exception
+    ) -> None:
+        """
+        Tests that `access_nested_map` raises the correct exception.
+        Args:
+            nested_map (dict): The nested dictionary to access.
+            path (tuple): The path to the value in the nested dictionary.
+            expected_exception (Exception): The expected exception.
 
-            Assers that `access_nested_map` raises `expected_exception`.
-            """
-            with self.assertRaises(expected_exception):
-                access_nested_map(nested_map, path)
+        Asserts that `access_nested_map` raises `expected_exception`
+        with the correct message.
+        """
+        with self.assertRaises(KeyError) as cm:
+            access_nested_map(nested_map, path)
+        self.assertEqual(str(cm.exception), str(expected_exception))
