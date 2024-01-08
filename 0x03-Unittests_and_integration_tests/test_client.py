@@ -164,6 +164,20 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         self.assertEqual(test_client.public_repos, self.expected_repos)
         self.get_patcher.assert_called_once()
 
+    def test_public_repos_with_license(self):
+        """
+        Tests that `GithubOrgClient.public_repos` returns the correct value
+        when filtering by license.
+
+        Asserts that the output of `GithubOrgClient.public_repos` is equal
+        to the expected list of repo names.
+        """
+        test_client = GithubOrgClient("google")
+        self.assertEqual(
+            test_client.public_repos(license="apache-2.0"), self.apache2_repos
+        )
+        self.get_patcher.assert_called_once()
+
     @classmethod
     def tearDownClass(cls):
         """
